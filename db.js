@@ -73,7 +73,6 @@ function findSlots(time) {
 }
 
 function findSlotsNear(slots, offset) {
-
   var nearOptions = [];
   var target = 0;
   var sortedSlots = [];
@@ -89,13 +88,24 @@ function findSlotsNear(slots, offset) {
   });
 
   sortedSlots.length = 3;
-
   return sortedSlots;
 }
 
 
 function selectSlot(id, name, email) {
   console.log(id, name, email)
+  firebase.database().ref('slots/'+id).once('value').then(function(snapshot) {
+    if(snapshot.val().name) {
+      tryAgain();
+    } else {
+      firebase.database().ref('slots/' + id).update({
+        name: name,
+        email: email,
+        photo : null
+      });
+      completeRegistration();
+    }
+  });
 
 }
 

@@ -94,7 +94,8 @@ function twSignup() {
       }
     });
 
-    $('#twSignup').hide();
+    $('#signup').hide();
+    $('#form').show();
   }).catch(function(error) { console.log(error); });
 }
 
@@ -107,6 +108,25 @@ function fbSignup() {
       $('#name').val(data.name);
       $('#email').val(data.email);
     });
-    $('#fbSignup').hide();
+    $('#signup').hide();
+    $('#form').show();
   });
+}
+
+function tryAgain() {
+  alert('Oh no! That slot was just taken! Please select a new one.');
+  $('#findSlots').click();
+}
+
+function completeRegistration() {
+  $('#form').hide();
+
+  var time = $('.slot.selectedSlot')[0].innerHTML;
+  var h = parseInt(time.substring(0, 2));
+  var date = h >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
+  $('#regTime').text(time);
+  $('#regDate').text(date);
+  $('#thankyou').show();
+
+  // send email
 }
