@@ -17,8 +17,27 @@ input {
   margin: 1em;
   padding: 4px;
   font-size: 16px;
+  width: 300px;
 }
 
 #desiredSlot {
   display: inline;
+}
+
+.slot {
+  margin: 0.5em;
+  color: black;
+  border: 1px solid black;
+}
+
+.slot:hover {
+  color: purple;
+  border: 1px solid purple;
+}
+
+.selectedSlot, .slot.selectedSlot:hover  {
+  background: purple;
+  border: 1px solid purple;
+  color: white;
+  font-weight: bold;
 }

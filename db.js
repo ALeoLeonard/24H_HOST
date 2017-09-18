@@ -1,25 +1,27 @@
 //deleteSlots();
-//updateSlots();
+updateSlots();
 
 var startHour = 14;
 
 function updateSlots() {
   var slotMins = 15;
   var numSlots = 24 * 60 / slotMins;
-  var slotId = 0;
+  var ind = 0;
 
   var slotDate = Date.parse('2017-10-28T14:00:00');
 
-  while (slotId < numSlots) {
-    firebase.database().ref('slots/' + pad(slotId, 3)+'_'+slotDate.toString('HH:mm')).set({
+  while (ind < numSlots) {
+    var slotId = pad(ind, 3)+'_'+slotDate.toString('HH:mm');
+    firebase.database().ref('slots/' + slotId).set({
+      id: slotId,
       time: slotDate.toString('HH:mm'),
-      minOffset: slotMins * slotId,
+      minOffset: slotMins * ind,
       name: null,
       email: null,
       photo : null
     });
     slotDate.add({ minutes: slotMins});
-    slotId++;
+    ind++;
   }
 }
 
@@ -29,39 +31,45 @@ function deleteSlots() {
 
 function getAllSlots() {
   return new Promise(function(resolve, reject) {
+    var arr = [];
     firebase.database().ref('slots').once('value').then(function(snapshot) {
-      var array = $.map(snapshot.val(), function(value, index) { return value; });
-      resolve(array);
+      for (var s in snapshot.val()) {
+        arr.push(snapshot.val()[s]);
+      }
+      resolve(arr);
     });
   });
 }
 
 function findSlots(time) {
-  var parsedTime = Date.parse(time);
-  if (!parsedTime && time.length > 0) {
-    alert('Please enter a desired time in the format HH:mm');
-  } else {
-    getAllSlots().then(function(slots) {
-      var options = [];
-      if (!parsedTime) {
-        var opts = findSlotsNear(slots, 0);
-        options = options.concat(opts);
-        options = options.concat(findSlotsNear(slots, opts[0].minOffset + 120));
-      } else {
-        var mins = (parsedTime.getHours() - startHour) * 60 + parsedTime.getMinutes();
-        if (parsedTime.getHours() < startHour) {
-          mins += 24 * 60;
-          console.log('next day');
+  return new Promise(function(resolve, reject) {
+    var parsedTime = Date.parse(time);
+    if (!parsedTime && time.length > 0) {
+      alert('Please enter a desired time in the format HH:mm');
+      resolve([]);
+    } else {
+      getAllSlots().then(function(slots) {
+        var options = [];
+        if (!parsedTime) {
+          var opts = findSlotsNear(slots, 0);
+          options = options.concat(opts);
+          options = options.concat(findSlotsNear(slots, opts[0].minOffset + 120));
+        } else {
+          var mins = (parsedTime.getHours() - startHour) * 60 + parsedTime.getMinutes();
+          if (parsedTime.getHours() < startHour) {
+            mins += 24 * 60;
+            console.log('next day');
+          }
+          options = findSlotsNear(slots, mins);
         }
-        options = findSlotsNear(slots, mins);
-      }
-      while (options.length > 3) {
-        options.splice(Math.floor(Math.random()*options.length), 1);
+        while (options.length > 3) {
+          options.splice(Math.floor(Math.random()*options.length), 1);
+        }
         console.log(options);
-      }
-      console.log(options);
-    });
-  }
+        resolve(options);
+      });
+    }
+  });
 }
 
 function findSlotsNear(slots, offset) {
@@ -85,6 +93,11 @@ function findSlotsNear(slots, offset) {
   return sortedSlots;
 }
 
+
+function selectSlot(id, name, email) {
+  console.log(id, name, email)
+
+}
 
 function pad(n, width) {
   n = n + '';

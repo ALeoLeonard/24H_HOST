@@ -2,7 +2,34 @@ $(document).ready(function() {
 
   $('#twSignup').click(twSignup);
   $('#fbSignup').click(fbSignup);
-  $('#findSlots').click(function() { findSlots($('#desiredSlot').val()); });
+  $('#findSlots').click(function() { 
+    $('#timeslots').html('');
+    findSlots($('#desiredSlot').val()).then(function(slots) {    
+      for (var s in slots) {
+        $('#timeslots').append('<span class="slot button" data-slotid="'+slots[s].id+'">'+slots[s].time+'</span>');
+      }
+      $('.slot').click(function() {
+        $('.slot').removeClass('selectedSlot');
+        $(this).addClass('selectedSlot');
+        $('#register').show();
+      });
+    });
+  });
+
+  $('#register').click(function() {
+    var name = $('#name').val();
+    var email = $('#email').val();
+    if ($('.slot.selectedSlot').length === 0) {
+      alert('Please select a slot');
+    } else if (!name) {
+      alert('Please enter your name');
+    } else if (!email) {
+      alert('Please enter your email');
+    } else {
+      var id = $('.slot.selectedSlot')[0].getAttribute('data-slotid');
+      selectSlot(id, name, email);
+    }
+  })
 
 });
 
