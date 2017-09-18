@@ -1,5 +1,5 @@
-//deleteSlots();
-updateSlots();
+// deleteSlots();
+// updateSlots();
 
 var startHour = 14;
 
