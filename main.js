@@ -38,7 +38,9 @@ var data = {};
 // Initialize Firebase
 firebase.initializeApp(config);
 firebase.auth().languageCode = 'en_EN';
-
+firebase.auth().signInAnonymously().catch(function(error) {
+  console.log(error);
+});
 
 var database = firebase.database();
 
