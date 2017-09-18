@@ -3,10 +3,12 @@ $(document).ready(function() {
   $('#twSignup').click(twSignup);
   $('#fbSignup').click(fbSignup);
   $('#findSlots').click(function() { 
-    $('#timeslots').html('');
+    $('#timeslots').html('<p>Choose one:</p>');
     findSlots($('#desiredSlot').val()).then(function(slots) {    
       for (var s in slots) {
-        $('#timeslots').append('<span class="slot button" data-slotid="'+slots[s].id+'">'+slots[s].time+'</span>');
+        var h = parseInt(slots[s].time.substring(0, 2));
+        var date = h >= startHour ? 'Saturday 28 October' : 'Sunday 29 October';
+        $('#timeslots').append('<span class="slot button" data-slotid="'+slots[s].id+'">'+slots[s].time+' '+date+'</span><br>');
       }
       $('.slot').click(function() {
         $('.slot').removeClass('selectedSlot');
@@ -125,7 +127,7 @@ function completeRegistration() {
 
   var time = $('.slot.selectedSlot')[0].innerHTML;
   var h = parseInt(time.substring(0, 2));
-  var date = h >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
+  var date = h >= startHour ? 'Saturday 28 October' : 'Sunday 29 October';
   $('#regTime').text(time);
   $('#regDate').text(date);
   $('#thankyou').show();

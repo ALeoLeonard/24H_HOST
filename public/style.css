@@ -1,43 +1,54 @@
+body {
+  font-family: 'Inconsolata';
+  font-size: 24px;
+  text-align: center;
+  margin: 3em;
+}
+
+p {
+  line-height: 2em;
+  width: 800px;
+  margin: 0 auto;
+  line-height: 2em;
+}
 
 .button {
+  margin: 1em;
   padding: 5px;
-  border: 1px solid purple;
-  color: purple;
+  color: magenta;
   cursor: pointer;
   display: inline-block;
 }
 
 .button:hover {
-  color: black;
-  border: 1px solid black;
+  color: orangered;
 }
 
 input {
+  font-family: 'Inconsolata';
+  font-size: 24px;
   display: block;
-  margin: 1em;
+  margin: 1em auto 2em;
   padding: 4px;
-  font-size: 16px;
-  width: 300px;
+  width: 500px;
+  text-align: center;
 }
 
 #desiredSlot {
   display: inline;
+  width: 325px;
 }
 
 .slot {
-  margin: 0.5em;
-  color: black;
-  border: 1px solid black;
+  color: orange;
+  margin: 0.25em;
 }
 
 .slot:hover {
-  color: purple;
-  border: 1px solid purple;
+  color: orangered;
 }
 
 .selectedSlot, .slot.selectedSlot:hover  {
-  background: purple;
-  border: 1px solid purple;
-  color: white;
+  color: orangered;
   font-weight: bold;
 }
