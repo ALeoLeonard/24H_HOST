@@ -109,7 +109,7 @@ function tryAgain() {
   $('#findSlots').click();
 }
 
-function completeRegistration() {
+function completeRegistration(email, id) {
   $('#form').hide();
 
   var time = $('.slot.selectedSlot')[0].innerHTML;
@@ -117,6 +117,7 @@ function completeRegistration() {
   var date = h >= startHour ? 'Saturday 28 October' : 'Sunday 29 October';
   $('#regTime').text(time);
   $('#regDate').text(date);
+  $('#regCancel').attr('href', 'http://24hour.host/public/cancel.html?email='+email+'&id='+id);
   $('#thankyou').show();
 
   // send email

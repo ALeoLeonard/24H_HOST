@@ -104,7 +104,7 @@ function selectSlot(id, name, email, data) {
         photo : null,
         data: data
       });
-      completeRegistration();
+      completeRegistration(email, id);
     }
   });
 
