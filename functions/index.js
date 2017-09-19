@@ -2,6 +2,7 @@
 
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
+const Twitter = require('twitter');
 
 // Configure the email transport using the default SMTP transport and a GMail account.
 // For Gmail, enable these:
@@ -14,8 +15,14 @@ const gmailPassword = encodeURIComponent(functions.config().gmail.password);
 const mailTransport = nodemailer.createTransport(
     `smtps://${gmailEmail}:${gmailPassword}@smtp.gmail.com`);
 
-const APP_NAME = '24H HOST';
+var twitter = new Twitter({
+  consumer_key: functions.config().twitter.consumer_key,
+  consumer_secret: functions.config().twitter.consumer_secret,
+  access_token_key: functions.config().twitter.access_token_key,
+  access_token_secret: functions.config().twitter.access_token_secret
+});
 
+const APP_NAME = '24H HOST';
 
 
 exports.databaseChanged = functions.database.ref('slots').onWrite(event => {
@@ -35,11 +42,31 @@ exports.databaseChanged = functions.database.ref('slots').onWrite(event => {
     var date = hour >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
     var msg = 'You are confirmed to attend at '+res.time+' on '+date+'. You must be on time to enter. The 24H HOST awaits your arrival.';
     msg += ' You will receive one more reminder email the day of the event.';
+    msg += ' To cancel your reservation <a href="http://24hour.host/public/cancel.html?email='+res.email+'&id='+res.id+'">click here</a>.';
 
     sendConfirmationEmail(res.email, res.name, msg);
   }
 });
 
+exports.twSignup = functions.https.onRequest((req, res) => {
+  res.header('Content-Type','application/json');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+
+  var user = req.query.user;
+  console.log(user);
+
+
+  var params = {screen_name: user};
+  twitter.get('statuses/user_timeline', params, function(error, tweets, response) {
+    if (!error) {
+      console.log(tweets);
+      res.json(tweets);
+    } else res.json({});
+  });
+
+});
 
 
 
@@ -52,8 +79,8 @@ function sendConfirmationEmail(email, displayName, msg) {
 
   // The user unsubscribed to the newsletter.
   mailOptions.subject = `Your 24H HOST reservation`;
-  mailOptions.text = `Hi ${displayName || ''}, `+msg;
+  mailOptions.html = `Hi ${displayName || ''}, `+msg;
   return mailTransport.sendMail(mailOptions).then(() => {
-    console.log('Account deletion confirmation email sent to:', email);
+    console.log('Reservation confirmation email sent to:', email);
   });
 }
