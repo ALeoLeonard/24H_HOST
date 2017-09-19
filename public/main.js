@@ -44,7 +44,6 @@ firebase.auth().signInAnonymously().catch(function(error) {
   console.log(error);
 });
 
-var database = firebase.database();
 
 window.fbAsyncInit = function() {
   FB.init({
@@ -82,24 +81,12 @@ function twSignup() {
     var user = result.user;
 
 
-    var Twitter = require('twitter');
-
-    var client = new Twitter({
-      consumer_key: '',
-      consumer_secret: '',
-      access_token_key: '',
-      access_token_secret: ''
+    $.getJSON('https://us-central1-host-24hour.cloudfunctions.net/twSignup?user='+user, function(data) {
+      data = data;
+      $('#signup').hide();
+      $('#form').show();
     });
 
-    var params = {screen_name: 'nodejs'};
-    client.get('statuses/user_timeline', params, function(error, tweets, response) {
-      if (!error) {
-        console.log(tweets);
-      }
-    });
-
-    $('#signup').hide();
-    $('#form').show();
   }).catch(function(error) { console.log(error); });
 }
 

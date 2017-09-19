@@ -12,6 +12,10 @@ p {
   line-height: 2em;
 }
 
+a {
+  text-decoration: none;
+}
+
 .button {
   margin: 1em;
   padding: 5px;

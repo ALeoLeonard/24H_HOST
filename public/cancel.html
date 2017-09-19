@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous'></script>
+  <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+  <script src='config.js'></script>
+  <script>
+    
+    function getParam(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    var email = getParam('email', window.href);
+    var id = getParam('id', window.href);
+
+    // Initialize Firebase
+    firebase.initializeApp(config);
+    firebase.auth().languageCode = 'en_EN';
+    firebase.auth().signInAnonymously().catch(function(error) {
+      console.log(error);
+    });
+
+    $(document).ready(function() {
+      firebase.database().ref('slots/'+id).once('value').then(function(snapshot) {
+        if(snapshot.val() && snapshot.val().email === email) {
+          firebase.database().ref('slots/'+id).remove();
+          $('#success').show();
+        } else {
+          $('#failure').show();
+        }
+      });
+    })
+  </script>
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div id='signup'>
+    <p id='success' style='display:none'>Your reservation has been cancelled.<br><a href='./' class='button'>Make a new reservation</a></p>
+    <p id='failure' style='display:none'>I'm sorry, that reservation couldn't be located.<a href='./' class='button'>Make a new reservation</a></p>
+  </div>
+
+  <div id='form' style='display: none'>
+    <br><br>
+    Name <input id='name'>
+    Email <input id='email'>
+    <br>
+    <input id='desiredSlot' placeholder='desired time (ex: 14:15)'>
+    <div id='findSlots' class='button'>Find Time</div>
+
+    <div id='timeslots'>
+    </div>
+    <br><br>
+    <div id='register' class='button' style='display:none'>Register</div>
+  </div>
+
+  <div id='thankyou' style='display:none'>
+    <p>You are confirmed to attend at <span id='regTime'></span> on <span id='regDate'></span>. You must be on time to enter. The 24H HOST awaits your arrival.</p>
+  </div>
+
+</body>
+</html>
