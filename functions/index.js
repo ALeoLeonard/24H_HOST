@@ -1,6 +1,9 @@
 'use strict';
 
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
+
 const nodemailer = require('nodemailer');
 const Twitter = require('twitter');
 
@@ -40,11 +43,12 @@ exports.databaseChanged = functions.database.ref('slots').onWrite(event => {
   if (res) {
     var hour = parseInt(res.time.substring(0, 2));
     var date = hour >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
-    var msg = 'You are confirmed to attend at '+res.time+' on '+date+'. You must be on time to enter. The 24H HOST awaits your arrival.';
+    var msg = 'Hi '+res.name+',<br><br>You are confirmed to attend at '+res.time+' on '+date+'. You must be on time to enter.';
+    msg += ' The 24H HOST awaits your arrival.';
     msg += ' You will receive one more reminder email the day of the event.';
     msg += ' To cancel your reservation <a href="http://24hour.host/public/cancel.html?email='+res.email+'&id='+res.id+'">click here</a>.';
 
-    sendConfirmationEmail(res.email, res.name, msg);
+    sendReminderEmail(res.email, msg);
   }
 });
 
@@ -68,10 +72,31 @@ exports.twSignup = functions.https.onRequest((req, res) => {
 
 });
 
+exports.reminder = functions.https.onRequest((req, res) => {
+  res.header('Content-Type','application/json');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
 
+  admin.database().ref('slots').once('value').then(function(snapshot) {
+    for (var s in snapshot.val()) {
+      var result = snapshot.val()[s];
+      if (result.email) {
+        var hour = parseInt(result.time.substring(0, 2));
+        var date = hour >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
+        var msg = 'Hi '+result.name+',<br><br>This is a reminder that you are confirmed to attend at '+result.time+' on '+date+'. You must be on time to enter.';
+        msg += ' The 24H HOST awaits your arrival.';
+        msg += ' You will receive one more reminder email the day of the event.';
+        msg += ' To cancel your reservation <a href="http://24hour.host/public/cancel.html?email='+result.email+'&id='+result.id+'">click here</a>.';
+
+        sendReminderEmail(result.email, msg);
+      }
+    }
+    res.status(200).send('');
+  });
+});
 
 // Sends a goodbye email to the given user.
-function sendConfirmationEmail(email, displayName, msg) {
+function sendReminderEmail(email, msg) {
   const mailOptions = {
     from: `${APP_NAME} <noreply@firebase.com>`,
     to: email
@@ -79,7 +104,7 @@ function sendConfirmationEmail(email, displayName, msg) {
 
   // The user unsubscribed to the newsletter.
   mailOptions.subject = `Your 24H HOST reservation`;
-  mailOptions.html = `Hi ${displayName || ''}, `+msg;
+  mailOptions.html = msg;
   return mailTransport.sendMail(mailOptions).then(() => {
     console.log('Reservation confirmation email sent to:', email);
   });
