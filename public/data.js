@@ -27,10 +27,14 @@ $(document).ready(function() {
   });
 
   $('#saveIdentifiers').click(saveIdentifiers);
+  $('#showAll').click(show);
+  $('#showNeedsIdentifiers').click(function(){ show('identifiers'); });
+  $('#showNeedsSong').click(function(){ show('song'); });
 
 });
 
 function openPerson() {
+  $('#personDetails').show();
   var id = $(this).attr('id');
   if (curId === id) {
     closePerson()
@@ -67,6 +71,7 @@ function openPerson() {
 }
 
 function closePerson() {
+  $('#personDetails').hide();
   $('#personData').html('');
   $('#personIdentifiers').val('');
   curId = null;
@@ -88,4 +93,16 @@ function saveIdentifiers() {
     $('#'+curId).removeClass('needsSong');
   }
   closePerson();
+}
+
+function show(arg) {
+  if (arg === 'identifiers') {
+    $('.person').hide();
+    $('.needsIdentifiers').show();
+  } else if (arg === 'song') {
+    $('.person').hide();
+    $('.needsSong').show();
+  } else {
+    $('.person').show();
+  }
 }

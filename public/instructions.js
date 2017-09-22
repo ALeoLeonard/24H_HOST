@@ -22,12 +22,18 @@ $(document).ready(function() {
 
       }
     }
-    $('.person').click(openPerson);
+    $('.person').click(startPerson);
   });
 
-  $('#saveIdentifiers').click(saveIdentifiers);
 
 });
+
+function startPerson() {
+  var id = $(this).attr('id');
+  if (slots[id].song) {
+    window.open(slots[id].song);
+  }
+}
 
 // when someone arrives, welcome
 // introduction to someone else
