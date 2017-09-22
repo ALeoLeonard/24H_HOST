@@ -69,6 +69,7 @@ function twSignup() {
 function fbSignup() {
   FB.login(function(){
     FB.api('/me/posts', function(posts) {
+      console.log(posts)
       data = posts.data;
       dataType = 'fb';
     });

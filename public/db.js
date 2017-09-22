@@ -11,7 +11,7 @@ function updateSlots() {
   var slotDate = Date.parse('2017-10-28T14:00:00');
 
   while (ind < numSlots) {
-    var slotId = pad(ind, 3)+'_'+slotDate.toString('HH:mm');
+    var slotId = pad(ind, 3)+'_'+slotDate.toString('HH_mm');
     firebase.database().ref('slots/' + slotId).set({
       id: slotId,
       time: slotDate.toString('HH:mm'),

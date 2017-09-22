@@ -58,8 +58,16 @@ input {
   font-weight: bold;
 }
 
-.review {
+#dataPage {
+  text-align: left;
+}
+
+.needsIdentifiers {
   color: red;
+}
+
+.needsSong {
+  color: purple;
 }
 
 .person {
