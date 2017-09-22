@@ -106,7 +106,7 @@ function findSlotsNear(slots, offset) {
 }
 
 
-function selectSlot(id, name, email, data) {
+function selectSlot(id, name, email, data, dataType) {
   console.log(id, name, email)
   firebase.database().ref('slots/'+id).once('value').then(function(snapshot) {
     if(snapshot.val().name) {
@@ -116,7 +116,8 @@ function selectSlot(id, name, email, data) {
         name: name,
         email: email,
         photo : null,
-        data: data
+        data: data,
+        dataType: dataType
       });
       completeRegistration(email, id);
     }

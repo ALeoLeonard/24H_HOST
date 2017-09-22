@@ -36,17 +36,26 @@ function openPerson() {
   $('#personData').html('');
   for (var d in slots[id].data) {
     var m = '';
-    if (slots[id].data[d].message) {
-      m += slots[id].data[d].message;
+    if (slots[id].dataType === 'fb') {
+      if (slots[id].data[d].message) {
+        m += slots[id].data[d].message;
+      }
+      if (slots[id].data[d].story) {
+        m += ' ('+slots[id].data[d].story+')';
+      }
+    } else {
+      if (slots[id].data[d].text) {
+        m += slots[id].data[d].text;
+      }
+      if (slots[id].data[d].favorite_count) {
+        m += ' (fav: '+slots[id].data[d].favorite_count+')';
+      }
     }
-    if (slots[id].data[d].story) {
-      m += ' ('+slots[id].data[d].story+')';
-    }
-    $('#personData').append('<div>'+m+'</div>');
+    if (m) $('#personData').append('<div>'+m+'</div>');
 
     $('#personIdentifiers').html('');
     for (var i in slots[id].identifiers) {
-      $('#personIdentifiers').append(slots[id].identifiers+'\n');
+      $('#personIdentifiers').append(slots[id].identifiers[i]+'\n');
     }
   }
   console.log(slots[id]);
@@ -55,6 +64,7 @@ function openPerson() {
 function closePerson() {
   $('#personData').html('');
   $('#personIdentifiers').val('');
+  $('#'+curId).removeClass('review');
   curId = null;
 }
 

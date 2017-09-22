@@ -18,13 +18,6 @@ const gmailPassword = encodeURIComponent(functions.config().gmail.password);
 const mailTransport = nodemailer.createTransport(
     `smtps://${gmailEmail}:${gmailPassword}@smtp.gmail.com`);
 
-var twitter = new Twitter({
-  consumer_key: functions.config().twitter.consumer_key,
-  consumer_secret: functions.config().twitter.consumer_secret,
-  access_token_key: functions.config().twitter.access_token_key,
-  access_token_secret: functions.config().twitter.access_token_secret
-});
-
 const APP_NAME = '24H HOST';
 
 
@@ -59,13 +52,20 @@ exports.twSignup = functions.https.onRequest((req, res) => {
 
 
   var user = req.query.user;
+  var token = req.query.token;
+  var secret = req.query.secret;
   console.log(user);
 
+  var twitter = new Twitter({
+    consumer_key: functions.config().twitter.consumer_key,
+    consumer_secret: functions.config().twitter.consumer_secret,
+    access_token_key: token,
+    access_token_secret: secret
+  });
 
   var params = {screen_name: user};
   twitter.get('statuses/user_timeline', params, function(error, tweets, response) {
     if (!error) {
-      console.log(tweets);
       res.json(tweets);
     } else res.json({});
   });
