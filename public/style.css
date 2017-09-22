@@ -57,3 +57,23 @@ input {
   color: orangered;
   font-weight: bold;
 }
+
+.review {
+  color: red;
+}
+
+.person {
+  cursor: pointer;
+}
+
+.person:hover {
+  color: magenta;
+}
+
+#personData {
+  text-align: left;
+}
+
+#personIdentifiers {
+  width: 100%;
+}

@@ -93,7 +93,7 @@ function twSignup() {
 function fbSignup() {
   FB.login(function(){
     FB.api('/me/posts', function(posts) {
-      data = posts;
+      data = posts.data;
     });
     FB.api('/me', {fields: ['name', 'email']}, function(data) {
       $('#name').val(data.name);

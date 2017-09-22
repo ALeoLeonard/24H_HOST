@@ -1,5 +1,5 @@
-// deleteSlots();
-// updateSlots();
+//deleteSlots();
+//updateSlots();
 
 var startHour = 14;
 
@@ -23,13 +23,23 @@ function updateSlots() {
     slotDate.add({ minutes: slotMins});
     ind++;
   }
+  console.log('slots updated');
 }
 
 function deleteSlots() {
   firebase.database().ref('slots').remove();
+  console.log('slots deleted');
 }
 
 function getAllSlots() {
+  return new Promise(function(resolve, reject) {
+    firebase.database().ref('slots').once('value').then(function(snapshot) {
+      resolve(snapshot.val());
+    });
+  });
+}
+
+function getAllSlotsArray() {
   return new Promise(function(resolve, reject) {
     var arr = [];
     firebase.database().ref('slots').once('value').then(function(snapshot) {
@@ -41,6 +51,10 @@ function getAllSlots() {
   });
 }
 
+function updateSlot(slotId, data) {
+  firebase.database().ref('slots/' + slotId).update(data);
+}
+
 function findSlots(time) {
   return new Promise(function(resolve, reject) {
     var parsedTime = Date.parse(time);
@@ -48,7 +62,7 @@ function findSlots(time) {
       alert('Please enter a desired time in the format HH:mm');
       resolve([]);
     } else {
-      getAllSlots().then(function(slots) {
+      getAllSlotsArray().then(function(slots) {
         var options = [];
         if (!parsedTime) {
           var opts = findSlotsNear(slots, 0);
