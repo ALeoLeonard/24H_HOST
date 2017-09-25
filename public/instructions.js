@@ -7,6 +7,7 @@ firebase.auth().signInAnonymously().catch(function(error) {
 
 var slots;
 var curId;
+var curSongWindow, lastSongWindow;
 
 $(document).ready(function() {
 
@@ -19,6 +20,7 @@ $(document).ready(function() {
         var c = 'person';
         if (!slots[s].identifiers || slots[s].identifiers.length == 0) c+=' review';
         $('#people').append('<div id="'+slots[s].id+'" class="'+c+'">'+slots[s].time+' '+slots[s].name+'</div>');
+        $('body').append('<a href="'+slots[s].song+'" id="'+slots[s].song+'">'+slots[s].song+'</a>');
 
       }
     }
@@ -31,7 +33,8 @@ $(document).ready(function() {
 function startPerson() {
   var id = $(this).attr('id');
   if (slots[id].song) {
-    window.open(slots[id].song);
+    if (curSongWindow) curSongWindow.location = slots[id].song;
+    else curSongWindow = window.open(slots[id].song);
   }
 }
 
