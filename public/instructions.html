@@ -16,18 +16,31 @@
 
   <script id='personTmpl' type='text/x-jsrender'>
   <div id='{{:id}}' class='person {{:class}}'>
-    {{:time}} - <span class='name'>{{:name}}&nbsp;</span>
+    {{:time}} - <span class='name'>{{:name}}</span>
     {{if name}}
-    <span class='button personHere'>here</span>
-    <span class='button personLeft'>left</span>
-    <span class='button personNoshow'>noshow</span>
+    <span class='button personHere {{if status=="here"}}selected{{/if}}'>here</span>
+    <span class='button personLeft {{if status=="left"}}selected{{/if}}'>left</span>
+    <span class='button personNoshow {{if status=="noshow"}}selected{{/if}}'>noshow</span>
     {{/if}}
   </div>
   </script>
 
-  <div>
-    <div id='people'></div>
+
+  <script id='lineTmpl' type='text/x-jsrender'>
+  <div class='line'>
+    <span class='to'>{{:to}}</span> <span class='msg'>{{:msg}}</span>
   </div>
+  </script>
+
+  <section id='left'>
+    <h2>SCHEDULE</h2>
+    <div id='people'></div>
+  </section>
+  
+  <section id='right'>
+    <h2>LINES</h2>
+    <div id='lines'></div>
+  </section>
 
 </body>
 </html>

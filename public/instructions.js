@@ -6,13 +6,13 @@ firebase.auth().signInAnonymously().catch(function(error) {
 });
 
 var slots;
-var people;
+var people = [];
 var curSongWindow;
 
 $(document).ready(function() {
 
-  getAllSlots().then(function(s) {
-    slots = s;
+  getAllSlots().then(function(data) {
+    slots = data;
     for (var p in slots) {
       addToSchedule(slots[p]);
     }
@@ -22,15 +22,13 @@ $(document).ready(function() {
 
     scrollToNow();
     setInterval(scrollToNow, 60*1000);
-  });
-
-  getRoomPeople().then(function(p) {
-    people = p || [];
+    console.log(people.length + ' people in the room')
   });
 
 });
 
 function addToSchedule(p) {
+  if (p.status === 'here') people.push(p);
   p.class = p.id.substr(4, 7);
   var htmlOutput = $.templates('#personTmpl').render(p);
   delete p.class;
@@ -39,8 +37,8 @@ function addToSchedule(p) {
 
 function startPerson() {
   var id = $(this).parent().attr('id');
+  $(this).parent().find('.button').removeClass('selected');
   $(this).addClass('selected');
-  $(this).parent().find('.personNoshow').removeClass('selected');
 
   // start song
   if (slots[id].song) {
@@ -49,24 +47,28 @@ function startPerson() {
   }
 
   // add hello line
+  var msg = 'hello '+slots[id].name+'! thanks for coming';
+  addLine({to: slots[id].name, msg: msg});
 
   // add drink line
+  var drinkMsg = 'would you like a drink? you look like a '+slots[id].drink+' type of person';
+  setTimeout(function() { addLine({to: slots[id].name, msg: drinkMsg}); }, 2000);
 
   // add intro line
+  setTimeout(function() { introPerson(id); }, 3000);
+
+  // add person to array of people in room
+  people.push(slots[id]);
 
   // update data
   updatePersonStatus(id, 'here');
-  
-  // add person to array of people in room
-  people.push(slots[id]);
-  updateRoomPeople(people);
 
 }
 
 function endPerson() {
   var id = $(this).parent().attr('id');
+  $(this).parent().find('.button').removeClass('selected');
   $(this).addClass('selected');
-  $(this).parent().find('.personHere').removeClass('selected');
 
   // print receipt
 
@@ -74,7 +76,6 @@ function endPerson() {
 
   // remove person from array of people in room
   people = people.filter(function(el) { return el.id !== id; });
-  updateRoomPeople(people);
 
   // update data
   updatePersonStatus(id, 'left');
@@ -82,8 +83,18 @@ function endPerson() {
 
 function noshowPerson() {
   var id = $(this).parent().attr('id');
+  $(this).parent().find('.button').removeClass('selected');
   $(this).addClass('selected');
   updatePersonStatus(id, 'noshow');
+}
+
+function introPerson(personA) {
+  // pick person b
+
+  // craft message
+  var introMsg = 'I would like to introduce you to ';
+  addLine({intro: true, to: slots[id].name, next: 'blah'});
+  addLine({to: slots[id].name, msg: introMsg});
 }
 
 function updatePersonStatus(id, status) {
@@ -99,8 +110,16 @@ function scrollToNow() {
   var m = (parseInt((minutes + 7.5)/15) * 15) % 60;
   var h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
   var str = '.'+h.toString().padStart(2, '0') + '_' + m.toString().padStart(2, '0');
-  $(document).scrollTop( $(str).offset().top );
+  $('#people').scrollTop( $(str).offset().top - $('#people').offset().top - 10 );
   $(str).addClass('nowPerson');
+}
+
+function addLine(data) {
+  var htmlOutput = $.templates('#lineTmpl').render(data);
+  $('#lines').prepend(htmlOutput);
+  if ($('.line').length > 10) {
+    $('.line').last().remove();
+  }
 }
 
 

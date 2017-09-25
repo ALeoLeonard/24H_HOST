@@ -2,8 +2,23 @@ body {
   font-family: 'Inconsolata';
   font-size: 24px;
   text-align: left;
-  margin: 3em auto;
-  width: 800px;
+  margin: 1em auto;
+  width: 1200px;
+}
+
+#left {
+  width: 600px;
+  float: left;
+}
+
+#right {
+  width: 500px;
+  float: right;
+}
+
+#people {
+  height: 600px;
+  overflow: scroll;
 }
 
 .person {
@@ -17,7 +32,7 @@ body {
 }
 
 .name {
-  width: 250px;
+  width: 240px;
   display: inline-block;
 }
 
@@ -31,4 +46,12 @@ body {
 .button:hover, .button.selected {
   background-color: magenta;
   color: white;
+}
+
+.to {
+  color: #ABABAB;
+}
+
+.line {
+  margin-bottom: 1em;
 }
