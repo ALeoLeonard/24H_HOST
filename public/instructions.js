@@ -6,37 +6,41 @@ firebase.auth().signInAnonymously().catch(function(error) {
 });
 
 var slots;
-var curId;
-var curSongWindow, lastSongWindow;
+var people;
+var curSongWindow;
 
 $(document).ready(function() {
 
   getAllSlots().then(function(s) {
     slots = s;
     for (var p in slots) {
-      slots[p].class = slots[p].id.substr(4, 7);
       addToSchedule(slots[p]);
     }
     $('.personHere').click(startPerson);
-    // $('.personLeft').click(personLeft);
-    // $('.personNoshow').click(personNoshow);
+    $('.personLeft').click(endPerson);
+    $('.personNoshow').click(noshowPerson);
 
     scrollToNow();
     setInterval(scrollToNow, 60*1000);
   });
 
+  getRoomPeople().then(function(p) {
+    people = p || [];
+  });
+
 });
 
 function addToSchedule(p) {
-  console.log(p);
-
+  p.class = p.id.substr(4, 7);
   var htmlOutput = $.templates('#personTmpl').render(p);
+  delete p.class;
   $("#people").append(htmlOutput);
 }
 
 function startPerson() {
   var id = $(this).parent().attr('id');
   $(this).addClass('selected');
+  $(this).parent().find('.personNoshow').removeClass('selected');
 
   // start song
   if (slots[id].song) {
@@ -49,6 +53,42 @@ function startPerson() {
   // add drink line
 
   // add intro line
+
+  // update data
+  updatePersonStatus(id, 'here');
+  
+  // add person to array of people in room
+  people.push(slots[id]);
+  updateRoomPeople(people);
+
+}
+
+function endPerson() {
+  var id = $(this).parent().attr('id');
+  $(this).addClass('selected');
+  $(this).parent().find('.personHere').removeClass('selected');
+
+  // print receipt
+
+  // add goodbye line
+
+  // remove person from array of people in room
+  people = people.filter(function(el) { return el.id !== id; });
+  updateRoomPeople(people);
+
+  // update data
+  updatePersonStatus(id, 'left');
+}
+
+function noshowPerson() {
+  var id = $(this).parent().attr('id');
+  $(this).addClass('selected');
+  updatePersonStatus(id, 'noshow');
+}
+
+function updatePersonStatus(id, status) {
+  slots[id].status=status;
+  updateSlot(id, slots[id]);
 }
 
 function scrollToNow() {

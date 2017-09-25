@@ -125,6 +125,19 @@ function selectSlot(id, name, email, data, dataType) {
 
 }
 
+
+function getRoomPeople() {
+  return new Promise(function(resolve, reject) {
+    firebase.database().ref('roomPeople').once('value').then(function(snapshot) {
+      resolve(snapshot.val());
+    });
+  });
+}
+
+function updateRoomPeople(data) {
+  firebase.database().ref('roomPeople').set(data);
+}
+
 function pad(n, width) {
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;

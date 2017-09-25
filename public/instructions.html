@@ -17,9 +17,11 @@
   <script id='personTmpl' type='text/x-jsrender'>
   <div id='{{:id}}' class='person {{:class}}'>
     {{:time}} - <span class='name'>{{:name}}&nbsp;</span>
+    {{if name}}
     <span class='button personHere'>here</span>
     <span class='button personLeft'>left</span>
     <span class='button personNoshow'>noshow</span>
+    {{/if}}
   </div>
   </script>
 
