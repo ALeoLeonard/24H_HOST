@@ -28,7 +28,10 @@ $(document).ready(function() {
 });
 
 function addToSchedule(p) {
-  if (p.status === 'here') people.push(p);
+  if (p.status === 'here') {
+    p.intros = [];
+    people.push(p);
+  }
   p.class = p.id.substr(4, 7);
   var htmlOutput = $.templates('#personTmpl').render(p);
   delete p.class;
@@ -39,6 +42,8 @@ function startPerson() {
   var id = $(this).parent().attr('id');
   $(this).parent().find('.button').removeClass('selected');
   $(this).addClass('selected');
+
+  slots[id].intros = [];
 
   // start song
   if (slots[id].song) {
@@ -55,7 +60,7 @@ function startPerson() {
   setTimeout(function() { addLine({to: slots[id].name, msg: drinkMsg}); }, 2000);
 
   // add intro line
-  setTimeout(function() { introPerson(id); }, 3000);
+  setTimeout(function() { introPerson(slots[id]); }, 3000);
 
   // add person to array of people in room
   people.push(slots[id]);
@@ -89,12 +94,35 @@ function noshowPerson() {
 }
 
 function introPerson(personA) {
-  // pick person b
+  if (!personA) {
+    personA = pickPerson();
+  }
+  personB = pickPerson(personA);
 
-  // craft message
-  var introMsg = 'I would like to introduce you to ';
-  addLine({intro: true, to: slots[id].name, next: 'blah'});
-  addLine({to: slots[id].name, msg: introMsg});
+  if (personA && personB) {
+    personA.intros.push(personB.id);
+    personB.intros.push(personA.id);
+
+    console.log(people);
+
+    // craft message
+    var introMsg = personA.name+' I would like to introduce you to '+personB.name;
+    addLine({intro: true, to: personA.name, next: personB.name});
+    setTimeout(function() {
+      addLine({intro: true, to: personA.name, next: personB.name, msg: introMsg});
+    }, 3000);
+  }
+}
+
+function pickPerson(firstPerson) {
+  people = shuffle(people);
+  for (p in people) {
+    if (!firstPerson) return people[p];
+    if (people[p].id !== firstPerson.id && !alreadyIntroduced(firstPerson, people[p])) {
+      return people[p];
+    }
+  }
+  return false;
 }
 
 function updatePersonStatus(id, status) {
@@ -123,6 +151,27 @@ function addLine(data) {
 }
 
 
+function alreadyIntroduced(personA, personB) {
+  if (!personA.intros || !personB.intros) return false;
+  return $.inArray(personB.id, personA.intros) !== -1;
+}
+
+
+function shuffle(arr) {
+  var collection = arr,
+      len = arr.length,
+      random,
+      temp;
+
+  while (len) {
+    random = Math.floor(Math.random() * len);
+    len -= 1;
+    temp = collection[len];
+    collection[len] = collection[random];
+    collection[random] = temp;
+  }
+  return collection;
+};
 // when someone arrives, welcome
 // introduction to someone else
 // offer drink
