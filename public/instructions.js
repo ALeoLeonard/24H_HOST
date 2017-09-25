@@ -13,30 +13,56 @@ $(document).ready(function() {
 
   getAllSlots().then(function(s) {
     slots = s;
-    console.log(slots)
-    for (var s in slots) {
-      if (slots[s].name) {
-        console.log(slots[s]);
-        var c = 'person';
-        if (!slots[s].identifiers || slots[s].identifiers.length == 0) c+=' review';
-        $('#people').append('<div id="'+slots[s].id+'" class="'+c+'">'+slots[s].time+' '+slots[s].name+'</div>');
-        $('body').append('<a href="'+slots[s].song+'" id="'+slots[s].song+'">'+slots[s].song+'</a>');
-
-      }
+    for (var p in slots) {
+      slots[p].class = slots[p].id.substr(4, 7);
+      addToSchedule(slots[p]);
     }
-    $('.person').click(startPerson);
-  });
+    $('.personHere').click(startPerson);
+    // $('.personLeft').click(personLeft);
+    // $('.personNoshow').click(personNoshow);
 
+    scrollToNow();
+    setInterval(scrollToNow, 60*1000);
+  });
 
 });
 
+function addToSchedule(p) {
+  console.log(p);
+
+  var htmlOutput = $.templates('#personTmpl').render(p);
+  $("#people").append(htmlOutput);
+}
+
 function startPerson() {
-  var id = $(this).attr('id');
+  var id = $(this).parent().attr('id');
+  $(this).addClass('selected');
+
+  // start song
   if (slots[id].song) {
     if (curSongWindow) curSongWindow.location = slots[id].song;
     else curSongWindow = window.open(slots[id].song);
   }
+
+  // add hello line
+
+  // add drink line
+
+  // add intro line
 }
+
+function scrollToNow() {
+  $('.person').removeClass('nowPerson');
+  var now = new Date();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+  var m = (parseInt((minutes + 7.5)/15) * 15) % 60;
+  var h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
+  var str = '.'+h.toString().padStart(2, '0') + '_' + m.toString().padStart(2, '0');
+  $(document).scrollTop( $(str).offset().top );
+  $(str).addClass('nowPerson');
+}
+
 
 // when someone arrives, welcome
 // introduction to someone else
@@ -48,3 +74,6 @@ function startPerson() {
 // receipt print on exit
 
 // how many people there at a time?
+
+
+// pers

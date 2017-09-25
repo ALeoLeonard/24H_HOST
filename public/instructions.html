@@ -4,14 +4,25 @@
   <title>instructions 24H</title>
   <script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous'></script>
   <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+  <script src="jsrender.min.js"></script>
   <script src='config.js'></script>
   <script src='instructions.js'></script>
   <script src='db.js'></script>
   <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="instructions.css">
 
 </head>
 <body>
+
+  <script id='personTmpl' type='text/x-jsrender'>
+  <div id='{{:id}}' class='person {{:class}}'>
+    {{:time}} - <span class='name'>{{:name}}&nbsp;</span>
+    <span class='button personHere'>here</span>
+    <span class='button personLeft'>left</span>
+    <span class='button personNoshow'>noshow</span>
+  </div>
+  </script>
+
   <div>
     <div id='people'></div>
   </div>
