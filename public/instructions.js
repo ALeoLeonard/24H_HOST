@@ -172,13 +172,11 @@ function shuffle(arr) {
   }
   return collection;
 };
-// when someone arrives, welcome
-// introduction to someone else
-// offer drink
+
+
 // every 5 minutes move them to someone else
 // after 5 moves, escort them out
 
-// some way to confirm person arrived
 // receipt print on exit
 
 // how many people there at a time?
