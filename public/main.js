@@ -119,7 +119,12 @@ function register() {
   }
 }
 
-function completeRegistration(email, id) {
+function completeRegistration(id, name, email, time) {
+
+  $.getJSON('https://us-central1-host-24hour.cloudfunctions.net/complete?id='+id+'&name='+name+'&email='+email+'&time='+time, function(res) {
+    console.log(res);
+  });
+
   $('#form').hide();
 
   var time = $('.slot.selectedSlot')[0].innerHTML;

@@ -119,7 +119,7 @@ function selectSlot(id, name, email, data, dataType) {
         data: data,
         dataType: dataType
       });
-      completeRegistration(email, id);
+      completeRegistration(id, name, email, snapshot.val().time);
     }
   });
 

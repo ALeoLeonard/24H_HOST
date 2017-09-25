@@ -27,8 +27,10 @@
 
 
   <script id='lineTmpl' type='text/x-jsrender'>
-  <div class='line'>
-    <span class='to'>{{:to}}</span> <span class='msg'>{{:msg}}</span>
+  <div class='line {{if intro}}intro{{/if}}'>
+    <span class='to'>{{:to}}</span>
+     <span class='next'>{{:next}}</span>
+     <span class='msg'>{{:msg}}</span>
   </div>
   </script>
 

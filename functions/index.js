@@ -21,28 +21,28 @@ const mailTransport = nodemailer.createTransport(
 const APP_NAME = '24H HOST';
 
 
-exports.databaseChanged = functions.database.ref('slots').onWrite(event => {
-  const original = event.data.val();
-  console.log(original);
 
-  var res;
-  for (var s in event.data.val()) {
-    if (event.data.child(s).changed('name')) {
-      res = event.data.val()[s];
-      break;
-    }
-  }
+exports.complete = functions.https.onRequest((req, res) => {
 
-  if (res) {
-    var hour = parseInt(res.time.substring(0, 2));
-    var date = hour >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
-    var msg = 'Hi '+res.name+',<br><br>You are confirmed to attend at '+res.time+' on '+date+'. You must be on time to enter.';
-    msg += ' The 24H HOST awaits your arrival.';
-    msg += ' You will receive one more reminder email the day of the event.';
-    msg += ' To cancel your reservation <a href="http://24hour.host/public/cancel.html?email='+res.email+'&id='+res.id+'">click here</a>.';
+  res.header('Content-Type','application/json');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    sendReminderEmail(res.email, msg);
-  }
+  console.log(req.query)
+  var name = req.query.name;
+  var email = req.query.email;
+  var time = req.query.time;
+  var id = req.query.id;
+
+  var hour = parseInt(time.substring(0, 2));
+  var date = hour >= 14 ? 'Saturday 28 October' : 'Sunday 29 October';
+  var msg = 'Hi '+name+',<br><br>You are confirmed to attend at '+time+' on '+date+'. You must be on time to enter.';
+  msg += ' The 24H HOST awaits your arrival.';
+  msg += ' You will receive one more reminder email the day of the event.';
+  msg += ' To cancel your reservation <a href="http://24hour.host/public/cancel.html?email='+email+'&id='+id+'">click here</a>.';
+
+  sendReminderEmail(email, msg);
+  res.status(200).send('');
 });
 
 exports.twSignup = functions.https.onRequest((req, res) => {
