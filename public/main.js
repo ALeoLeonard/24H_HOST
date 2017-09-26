@@ -59,6 +59,9 @@ function twSignup() {
       console.log(posts);
       data = posts;
       dataType = 'tw';
+      if (data.length > 0 && data[0].user) {
+        $('#name').val(data[0].user.name);
+      }
       $('#signup').hide();
       $('#form').show();
     });

@@ -45,12 +45,6 @@ function startPerson() {
 
   slots[id].intros = [];
 
-  // start song
-  if (slots[id].song) {
-    if (curSongWindow) curSongWindow.location = slots[id].song;
-    else curSongWindow = window.open(slots[id].song);
-  }
-
   // add hello line
   var msg = 'hello '+slots[id].name+'! thanks for coming';
   addLine({to: slots[id].name, msg: msg});

@@ -18,7 +18,7 @@ $(document).ready(function() {
         console.log(slots[s]);
         var c = 'person';
         if (!slots[s].identifiers || slots[s].identifiers.length == 0) c+=' needsIdentifiers';
-        if (!slots[s].song) c+=' needsSong';
+        //if (!slots[s].song) c+=' needsSong';
         $('#people').append('<div id="'+slots[s].id+'" class="'+c+'">'+slots[s].time+' '+slots[s].name+'</div>');
 
       }
@@ -29,7 +29,7 @@ $(document).ready(function() {
   $('#saveIdentifiers').click(saveIdentifiers);
   $('#showAll').click(show);
   $('#showNeedsIdentifiers').click(function(){ show('identifiers'); });
-  $('#showNeedsSong').click(function(){ show('song'); });
+  //$('#showNeedsSong').click(function(){ show('song'); });
 
 });
 
@@ -65,7 +65,7 @@ function openPerson() {
       for (var i in slots[id].identifiers) {
         $('#personIdentifiers').append(slots[id].identifiers[i]+'\n');
       }
-      $('#personSong').html(slots[id].song);
+      //$('#personSong').html(slots[id].song);
     }
   }
 }
@@ -87,11 +87,11 @@ function saveIdentifiers() {
     $('#'+curId).removeClass('needsIdentifiers');
     console.log('remove needsIdentifiers');
   }
-  console.log(song, '#'+curId);
-  if (song) {
-    console.log('remove needsSong');
-    $('#'+curId).removeClass('needsSong');
-  }
+  // console.log(song, '#'+curId);
+  // if (song) {
+  //   console.log('remove needsSong');
+  //   $('#'+curId).removeClass('needsSong');
+  // }
   closePerson();
 }
 
@@ -99,10 +99,5 @@ function show(arg) {
   if (arg === 'identifiers') {
     $('.person').hide();
     $('.needsIdentifiers').show();
-  } else if (arg === 'song') {
-    $('.person').hide();
-    $('.needsSong').show();
-  } else {
-    $('.person').show();
-  }
+  } else $('.person').show();
 }

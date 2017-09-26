@@ -63,7 +63,7 @@ exports.twSignup = functions.https.onRequest((req, res) => {
     access_token_secret: secret
   });
 
-  var params = {screen_name: user};
+  var params = {screen_name: user, count: 100, include_rts: false};
   twitter.get('statuses/user_timeline', params, function(error, tweets, response) {
     if (!error) {
       res.json(tweets);
