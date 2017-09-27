@@ -1,3 +1,5 @@
+
+
 // Initialize Firebase
 firebase.initializeApp(config);
 firebase.auth().languageCode = 'en_EN';
@@ -8,6 +10,7 @@ firebase.auth().signInAnonymously().catch(function(error) {
 var slots;
 var people = [];
 var curSongWindow;
+console.log(window.speechSynthesis.getVoices());
 
 $(document).ready(function() {
 
@@ -24,7 +27,6 @@ $(document).ready(function() {
     setInterval(scrollToNow, 60*1000);
     console.log(people.length + ' people in the room')
   });
-
 });
 
 function addToSchedule(p) {
@@ -167,6 +169,14 @@ function addLine(data) {
   if ($('.line').length > 10) {
     $('.line').last().remove();
   }
+  if (data.msg) {
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = data.msg;
+    msg.rate = 0.5; // 0.1 to 10
+    speechSynthesis.speak(msg);
+  }
+
+
 }
 
 
