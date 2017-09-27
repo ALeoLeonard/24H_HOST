@@ -71,35 +71,3 @@ input {
   color: orangered;
   font-weight: bold;
 }
-
-#dataPage {
-  text-align: left;
-}
-
-.needsIdentifiers {
-  color: red;
-}
-
-.needsSong {
-  color: purple;
-}
-
-.person {
-  cursor: pointer;
-}
-
-.person:hover {
-  color: magenta;
-}
-
-#personData {
-  text-align: left;
-}
-
-#personIdentifiers {
-  width: 100%;
-}
-
-#personSong {
-  width: 100%;
-}
