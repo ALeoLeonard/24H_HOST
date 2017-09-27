@@ -48,14 +48,25 @@ body {
   color: white;
 }
 
-.to {
-  color: #ABABAB;
+
+.line, .direction {
+  margin-bottom: 1em;
 }
 
-.line {
-  margin-bottom: 1em;
+.to, .intro, .time {
+  font-size: 0.7em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.to {
+  color: #cecece;
 }
 
 .intro {
   color: orange !important;
+}
+
+.time {
+  color: cyan;
 }

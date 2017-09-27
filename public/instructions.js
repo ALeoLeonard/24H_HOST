@@ -47,37 +47,60 @@ function startPerson() {
 
   // add hello line
   var msg = 'hello '+slots[id].name+'! thanks for coming';
-  addLine({to: slots[id].name, msg: msg});
+  addLine({a: slots[id].name, msg: msg});
 
   // add drink line
   var drinkMsg = 'would you like a drink? you look like a '+slots[id].drink+' type of person';
-  setTimeout(function() { addLine({to: slots[id].name, msg: drinkMsg}); }, 2000);
+  setTimeout(function() { addLine({a: slots[id].name, msg: drinkMsg}); }, 2000);
 
-  // add intro line
-  setTimeout(function() { introPerson(slots[id]); }, 3000);
+  // schedule intros
+  slots[id].timeouts = [];
+  for (var i=0; i<4; i++) { // every 5 minutes
+    slots[id].timeouts.push(setTimeout(function() { introPerson(slots[id]); }, 3000 + i * 1 * 60 * 1000));
+  }
+
+  // schedule exit
+  setTimeout(function() { endPerson(slots[id]); }, 20 * 60 * 1000);
 
   // add person to array of people in room
   people.push(slots[id]);
 
   // update data
-  updatePersonStatus(id, 'here');
+  updatePersonStatus(id, 'here', new Date().addMinutes(20));
 
 }
 
-function endPerson() {
-  var id = $(this).parent().attr('id');
-  $(this).parent().find('.button').removeClass('selected');
-  $(this).addClass('selected');
+function endPerson(val) {
+  var elt;
 
-  // print receipt
+  if (typeof val === 'string') { // timer
+    elt = $('#'+val).find('left');
+  } else { // mouse click
+    elt = $(this);
+  }
 
-  // add goodbye line
+  // update interface
+  var id = elt.parent().attr('id');
+  elt.parent().find('.button').removeClass('selected');
+  elt.addClass('selected');
 
   // remove person from array of people in room
   people = people.filter(function(el) { return el.id !== id; });
 
+  // clear remaining intros
+  for (var t in slots[id].timeouts) {
+    clearTimeout(slots[id].timeouts[t]);
+  }
+
+  // print receipt
+  // @TODO
+
+  // add goodbye line
+  var msg = 'goodbye '+slots[id].name;
+  addLine({a: slots[id].name, msg: msg});
+
   // update data
-  updatePersonStatus(id, 'left');
+  updatePersonStatus(id, 'left', new Date());
 }
 
 function noshowPerson() {
@@ -101,9 +124,9 @@ function introPerson(personA) {
 
     // craft message
     var introMsg = personA.name+' I would like to introduce you to '+personB.name;
-    addLine({intro: true, to: personA.name, next: personB.name});
+    addLine({intro: true, a: personA.name, b: personB.name});
     setTimeout(function() {
-      addLine({intro: true, to: personA.name, next: personB.name, msg: introMsg});
+      addLine({a: personA.name, b: personB.name, msg: introMsg});
     }, 3000);
   }
 }
@@ -111,16 +134,17 @@ function introPerson(personA) {
 function pickPerson(firstPerson) {
   people = shuffle(people);
   for (p in people) {
-    if (!firstPerson) return people[p];
-    if (people[p].id !== firstPerson.id && !alreadyIntroduced(firstPerson, people[p])) {
+    if (!firstPerson && people[p].id !== firstPerson.id) return people[p];
+    if (!alreadyIntroduced(firstPerson, people[p])) {
       return people[p];
     }
   }
   return false;
 }
 
-function updatePersonStatus(id, status) {
+function updatePersonStatus(id, status, leaveTime) {
   slots[id].status=status;
+  slots[id].leaveTime = leaveTime;
   updateSlot(id, slots[id]);
 }
 
@@ -137,6 +161,7 @@ function scrollToNow() {
 }
 
 function addLine(data) {
+  data.time = new Date().toString('HH:mm');
   var htmlOutput = $.templates('#lineTmpl').render(data);
   $('#lines').prepend(htmlOutput);
   if ($('.line').length > 10) {
