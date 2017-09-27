@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <title>DATA 24H</title>
+  <script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous'></script>
+  <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+  <script src='../config.js'></script>
+  <script src='data.js'></script>
+  <script src='../db.js'></script>
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+  <style>
+body {
+  font-family: 'Inconsolata';
+  font-size: 24px;
+  text-align: left;
+  margin: 3em;
+}
+
+p {
+  line-height: 2em;
+  width: 800px;
+  margin: 0 auto;
+  line-height: 2em;
+}
+
+a {
+  color: magenta;
+  text-decoration: none;
+}
+
+.button {
+  margin: 1em;
+  padding: 5px;
+  color: magenta;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.button:hover, a:hover {
+  color: orangered;
+}
+
+
+input {
+  font-family: 'Inconsolata';
+  font-size: 24px;
+  display: block;
+  margin: 1em auto 2em;
+  padding: 4px;
+  width: 500px;
+  text-align: center;
+}
+
+
+.needsIdentifiers {
+  color: red;
+}
+
+.person {
+  cursor: pointer;
+}
+
+.person:hover {
+  color: magenta;
+}
+
+#personData {
+  text-align: left;
+}
+
+#personIdentifiers {
+  width: 100%;
+}
+
+#personSong {
+  width: 100%;
+}
+  </style>
+
+</head>
+<body id='dataPage'>
+  <div>
+    <div id='showNeedsIdentifiers' class='button'>Show Needs Identifiers</div>
+    <!-- <div id='showNeedsSong' class='button'>Show Needs Song</div> -->
+    <div id='showAll' class='button'>Show All</div>
+    <div id='people'></div>
+    <div id='personDetails' style='display: none;'>
+      <textarea rows='5' id='personIdentifiers'></textarea>
+      <!-- <input id='personSong'></input> -->
+      <div id='saveIdentifiers' class='button'>Save</div>
+    </div>
+    <div id='personData'></div>
+  </div>
+
+</body>
+</html>
