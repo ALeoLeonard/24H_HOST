@@ -2,6 +2,7 @@
 * Place config.js in `public/`
 * Run a local server: `python -m SimpleHTTPServer 8000`
 * All frontend files are in `public/`
+* Automatically deployed to http://24hour.host/public/ on git push.
 
 ## Pages
 * localhost:8000/public/index.html - main signup page
