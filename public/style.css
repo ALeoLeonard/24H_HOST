@@ -29,6 +29,20 @@ a {
   color: orangered;
 }
 
+#processing {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background: white;
+}
+
+#processing p {
+  padding-top: 3em;
+}
+
 input {
   font-family: 'Inconsolata';
   font-size: 24px;

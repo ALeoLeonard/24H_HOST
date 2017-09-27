@@ -40,6 +40,7 @@ window.fbAsyncInit = function() {
 
 function twSignup() {
 
+
   var twProvider = new firebase.auth.TwitterAuthProvider();
   twProvider.setCustomParameters({
     'lang': 'en'
@@ -54,6 +55,7 @@ function twSignup() {
     // The signed-in user info.
     var user = result.user;
 
+    $('#processing').show();
 
     $.getJSON('https://us-central1-host-24hour.cloudfunctions.net/twSignup?user='+user+'&token='+token+'&secret='+secret, function(posts) {
       console.log(posts);
@@ -63,6 +65,7 @@ function twSignup() {
         $('#name').val(data[0].user.name);
       }
       $('#signup').hide();
+      $('#processing').hide();
       $('#form').show();
     });
 
